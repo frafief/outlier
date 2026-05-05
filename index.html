@@ -50,79 +50,11 @@
       </div>
     </section>
 
-    <!-- Featured Article -->
-    <a href="articles/contoh-thesis-bbca.html" class="featured-card fade-up">
-      <div class="featured-header">
-        <span class="featured-label">Latest</span>
-        <div class="featured-divider"></div>
-        <span class="featured-date">27 Mar 2026</span>
-      </div>
-      <div class="featured-tags">
-        <span class="tag">Thesis</span>
-        <span class="tag">BBCA</span>
-      </div>
-      <h2>Kenapa BBCA masih the real compounder di 2026</h2>
-      <p class="excerpt">Valuasi premium bukan berarti mahal. Di sini saya breakdown kenapa moat BBCA justru makin lebar dan kenapa market salah menilai growth trajectory-nya.</p>
-      <div class="featured-footer">
-        <span class="featured-meta">5 min read</span>
-        <span class="featured-cta">Read article →</span>
-      </div>
-    </a>
+    <!-- Featured Article (auto dari articles.json) -->
+    <div id="featured-card-wrapper"></div>
 
-    <!-- Article List -->
-    <div class="articles-list">
-
-      <a href="articles/contoh-ca-tlkm.html" class="article-card fade-up" data-tags="ca,tlkm">
-        <div class="article-card-inner">
-          <div class="article-card-content">
-            <div class="tags">
-              <span class="tag tag--category">CA</span>
-              <span class="tag tag--emiten">TLKM</span>
-            </div>
-            <h3>TLKM rights issue: dilutif atau opportunity?</h3>
-            <p class="excerpt">Breakdown mekanisme rights issue dan implikasinya ke valuasi per share</p>
-          </div>
-          <div class="article-card-meta">
-            <span class="date">25 Mar</span>
-            <span class="read-time">8 min</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="articles/contoh-general-pbv.html" class="article-card fade-up" data-tags="general">
-        <div class="article-card-inner">
-          <div class="article-card-content">
-            <div class="tags">
-              <span class="tag tag--category">General</span>
-            </div>
-            <h3>PBV di bawah 1 bukan berarti murah</h3>
-            <p class="excerpt">Misconception paling umum di retail investor Indonesia</p>
-          </div>
-          <div class="article-card-meta">
-            <span class="date">22 Mar</span>
-            <span class="read-time">4 min</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="articles/contoh-thesis-aces.html" class="article-card fade-up" data-tags="thesis,aces">
-        <div class="article-card-inner">
-          <div class="article-card-content">
-            <div class="tags">
-              <span class="tag tag--category">Thesis</span>
-              <span class="tag tag--emiten">ACES</span>
-            </div>
-            <h3>ACES: hidden gem di sektor retail?</h3>
-            <p class="excerpt">Kenapa emiten ini menarik perhatian saya di valuasi sekarang</p>
-          </div>
-          <div class="article-card-meta">
-            <span class="date">18 Mar</span>
-            <span class="read-time">6 min</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
+    <!-- Article List (auto dari articles.json) -->
+    <div class="articles-list" id="home-articles-list"></div>
 
     <!-- Saweria -->
     <div class="saweria-cta">
@@ -138,5 +70,73 @@
   </footer>
 
   <script src="assets/js/main.js"></script>
+  <script>
+    const MONTHS = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+    }
+
+    function formatDateShort(dateStr) {
+      const d = new Date(dateStr);
+      return d.getDate() + " " + MONTHS[d.getMonth()];
+    }
+
+    fetch("articles/articles.json")
+      .then(r => r.json())
+      .then(articles => {
+        if (!articles.length) return;
+
+        // Featured = artikel terbaru
+        const featured = articles[0];
+        document.getElementById("featured-card-wrapper").innerHTML = `
+          <a href="articles/${featured.file}" class="featured-card fade-up">
+            <div class="featured-header">
+              <span class="featured-label">Latest</span>
+              <div class="featured-divider"></div>
+              <span class="featured-date">${formatDate(featured.date)}</span>
+            </div>
+            <div class="featured-tags">
+              <span class="tag">${featured.tag.charAt(0).toUpperCase() + featured.tag.slice(1)}</span>
+              ${featured.emiten ? `<span class="tag">${featured.emiten}</span>` : ""}
+            </div>
+            <h2>${featured.title}</h2>
+            ${featured.excerpt ? `<p class="excerpt">${featured.excerpt}</p>` : ""}
+            <div class="featured-footer">
+              <span class="featured-meta">${featured.readtime || ""}</span>
+              <span class="featured-cta">Read article →</span>
+            </div>
+          </a>
+        `;
+
+        // Artikel lainnya (selain featured)
+        const rest = articles.slice(1);
+        if (rest.length === 0) return;
+
+        document.getElementById("home-articles-list").innerHTML = rest.map(a => `
+          <a href="articles/${a.file}" class="article-card fade-up">
+            <div class="article-card-inner">
+              <div class="article-card-content">
+                <div class="tags">
+                  <span class="tag tag--category">${a.tag.charAt(0).toUpperCase() + a.tag.slice(1)}</span>
+                  ${a.emiten ? `<span class="tag tag--emiten">${a.emiten}</span>` : ""}
+                </div>
+                <h3>${a.title}</h3>
+                ${a.excerpt ? `<p class="excerpt">${a.excerpt}</p>` : ""}
+              </div>
+              <div class="article-card-meta">
+                <span class="date">${formatDateShort(a.date)}</span>
+                <span class="read-time">${a.readtime || ""}</span>
+              </div>
+            </div>
+          </a>
+        `).join("");
+      })
+      .catch(() => {
+        document.getElementById("featured-card-wrapper").innerHTML = "";
+        document.getElementById("home-articles-list").innerHTML = "";
+      });
+  </script>
 </body>
 </html>
