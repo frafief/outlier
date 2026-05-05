@@ -369,7 +369,7 @@ tr.row-active td{background:rgba(219,218,190,0.10);border-left:3px solid var(--p
     <div class="ov-ctrl">
       <div class="ctrl-card">
         <label for="thr-s">Threshold</label>
-        <input type="range" id="thr-s" min="0.1" max="5" step="0.1" value="0.5" oninput="setThr(this.value)" aria-valuetext="0.5 persen">
+        <input type="range" id="thr-s" min="0.05" max="5" step="0.05" value="0.5" oninput="setThr(this.value)" aria-valuetext="0.5 persen">
         <span class="thr-val" id="thr-v" aria-live="polite">&gt;0.5%</span>
       </div>
       <div class="ctrl-card">
@@ -1299,7 +1299,7 @@ function buildPriceChart(code,daily,container){
   const corrRows=corrSorted.slice(0,14).map(({k,r,p,ci,n:dn},idx)=>{
     const abs=Math.abs(r||0);const barW=(abs*100).toFixed(1);
     const barColor=r>0?'#1a6b35':'#b03020';
-    const barLeft=r<0?`left:${(50-abs*50).toFixed(1)}%`:`left:50%`;
+    const barLeft=r<0?`left:${(50-abs*50).toFixed(2).replace(/.?0+$/,'')}%`:`left:50%`;
     const sl=sigLabel(r,p);const pl=pLabel(p);
     const insig=p==null||p>=0.1;
     const isTop=idx===0&&!insig&&abs>=0.5;
@@ -1498,7 +1498,7 @@ function stRender(){
   const sectors=new Set(rows.map(r=>r.sector).filter(Boolean)).size;
   document.getElementById('st-summary').innerHTML=`
     <div class="sum-card"><div class="sum-lbl">Total Emiten</div><div class="sum-val">${total.toLocaleString('id-ID')}</div><div class="sum-sub">${active} active</div></div>
-    <div class="sum-card"><div class="sum-lbl">Avg Foreign %</div><div class="sum-val">${avgF.toFixed(1)}%</div><div class="sum-sub">dari scripless</div></div>
+    <div class="sum-card"><div class="sum-lbl">Avg Foreign %</div><div class="sum-val">${avgF.toFixed(2).replace(/.?0+$/,'')}%</div><div class="sum-sub">dari scripless</div></div>
     <div class="sum-card"><div class="sum-lbl">Jumlah Sektor</div><div class="sum-val">${sectors}</div><div class="sum-sub">klasifikasi IDX</div></div>
     <div class="sum-card"><div class="sum-lbl">Hasil Filter</div><div class="sum-val">${total.toLocaleString('id-ID')}</div><div class="sum-sub">dari ${allCount} emiten</div></div>`;
   const tb=document.getElementById('st-body');
@@ -1629,7 +1629,7 @@ function initSelects(){
     el.innerHTML='<option value="">Semua sektor</option>'+secs.map(s=>`<option value="${s}">${s}</option>`).join('');
   });
 }
-function setThr(v){APP.thr=parseFloat(v);document.getElementById('thr-v').textContent=`>${parseFloat(v).toFixed(1)}%`;renderOv()}
+function setThr(v){APP.thr=parseFloat(v);document.getElementById('thr-v').textContent=`>${parseFloat(v).toFixed(2).replace(/.?0+$/,'')}%`;renderOv()}
 function goTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected','false'));
   document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
