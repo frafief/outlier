@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eksperimen "Sinarmas" Membangun Ekosistem Industri Kesehatan</title>
+<meta name="article:tag" content="thesis">
+<meta name="article:emiten" content="PYFA">
+<meta name="article:date" content="2026-05-05">
+<meta name="article:excerpt" content="Analisa bagaimana Sinarmas membangun ekosistem kesehatan dan implikasinya ke valuasi PYFA.">
+<meta name="article:readtime" content="10 min">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -221,9 +226,62 @@ hr.rl{border:none;border-top:1px solid var(--rule);margin:32px 0;}
   .eco-arr-wrap{transform:rotate(90deg);}
   .foot{padding:32px 20px;}
 }
+
+  /* === OUTLIER NAV OVERRIDE === */
+  @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+  .outlier-nav {
+    position: sticky; top: 0; z-index: 999;
+    background: #DBDABE;
+    border-bottom: 1px solid rgba(42,47,58,.06);
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+  }
+  .outlier-nav-inner {
+    max-width: 900px; margin: 0 auto;
+    padding: 14px 28px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .outlier-nav-logo {
+    display: flex; align-items: baseline; gap: 4px;
+    text-decoration: none;
+  }
+  .outlier-nav-logo-text {
+    font-weight: 700; font-size: 20px; letter-spacing: -1px; color: #2a2f3a;
+  }
+  .outlier-nav-logo-sub {
+    font-weight: 400; font-size: 11px; color: #6b7280;
+  }
+  .outlier-nav-beta {
+    font-size: 10px; color: #8B5A8B; font-weight: 500;
+    border: 1px solid rgba(139,90,139,.3); padding: 1px 6px;
+    border-radius: 4px; margin-left: 6px;
+  }
+  .outlier-nav-back {
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: rgba(42,47,58,.45);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color .2s;
+  }
+  .outlier-nav-back:hover { color: #2a2f3a; }
+  .outlier-nav-back::before { content: "←"; }
+
 </style>
 </head>
 <body>
+
+<!-- OUTLIER NAV -->
+<nav class="outlier-nav">
+  <div class="outlier-nav-inner">
+    <a href="../index.html" class="outlier-nav-logo">
+      <span class="outlier-nav-logo-text">Outlier</span>
+      <span class="outlier-nav-logo-sub">by frafief</span>
+      <span class="outlier-nav-beta">BETA</span>
+    </a>
+    <a href="index.html" class="outlier-nav-back">Articles</a>
+  </div>
+</nav>
+
 
 <!-- ══ COVER ══════════════════════════════════════ -->
 <div class="cover">

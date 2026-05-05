@@ -50,42 +50,8 @@
     </div>
 
     <!-- Articles -->
-    <div class="articles-list">
-
-      <a href="lippo_way_report_v2.html" class="article-card fade-up" data-tags="thesis,lpkr" data-date="2026-05-05">
-        <div class="article-card-inner">
-          <div class="article-card-content">
-            <div class="tags">
-              <span class="tag tag--category">Thesis</span>
-              <span class="tag tag--emiten">LPKR</span>
-            </div>
-            <h3>The Lippo Way — Thesis Report</h3>
-            <p class="excerpt">Breakdown thesis investasi grup Lippo dan strategi bisnis yang membentuk ekosistemnya.</p>
-          </div>
-          <div class="article-card-meta">
-            <span class="date">5 Mei</span>
-            <span class="read-time">10 min</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="sinarmas_ekosistem_kesehatan_v3.html" class="article-card fade-up" data-tags="thesis,smma" data-date="2026-05-05">
-        <div class="article-card-inner">
-          <div class="article-card-content">
-            <div class="tags">
-              <span class="tag tag--category">Thesis</span>
-              <span class="tag tag--emiten">SMMA</span>
-            </div>
-            <h3>Eksperimen "Sinarmas" Membangun Ekosistem Industri Kesehatan</h3>
-            <p class="excerpt">Analisa bagaimana Sinarmas membangun ekosistem kesehatan dan implikasinya ke valuasi.</p>
-          </div>
-          <div class="article-card-meta">
-            <span class="date">5 Mei</span>
-            <span class="read-time">10 min</span>
-          </div>
-        </div>
-      </a>
-
+    <div class="articles-list" id="articles-list">
+      <p style="color: rgba(42,47,58,0.4); font-size: 14px;">Memuat artikel...</p>
     </div>
 
     <!-- Saweria -->
@@ -101,5 +67,71 @@
   </footer>
 
   <script src="../assets/js/main.js"></script>
+  <script>
+    const MONTHS = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return d.getDate() + " " + MONTHS[d.getMonth()];
+    }
+
+    function renderArticles(articles, filter) {
+      const list = document.getElementById("articles-list");
+      const filtered = filter === "all" ? articles : articles.filter(a => a.tag === filter);
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<p style="color: rgba(42,47,58,0.4); font-size: 14px;">Belum ada artikel.</p>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(a => `
+        <a href="${a.file}" class="article-card fade-up" data-tags="${a.tag},${a.emiten.toLowerCase()}" data-date="${a.date}">
+          <div class="article-card-inner">
+            <div class="article-card-content">
+              <div class="tags">
+                <span class="tag tag--category">${a.tag.charAt(0).toUpperCase() + a.tag.slice(1)}</span>
+                ${a.emiten ? `<span class="tag tag--emiten">${a.emiten}</span>` : ""}
+              </div>
+              <h3>${a.title}</h3>
+              ${a.excerpt ? `<p class="excerpt">${a.excerpt}</p>` : ""}
+            </div>
+            <div class="article-card-meta">
+              <span class="date">${formatDate(a.date)}</span>
+              <span class="read-time">${a.readtime || ""}</span>
+            </div>
+          </div>
+        </a>
+      `).join("");
+    }
+
+    let allArticles = [];
+    let activeFilter = "all";
+
+    // Check URL param for tag filter
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("tag")) activeFilter = urlParams.get("tag");
+
+    fetch("articles.json")
+      .then(r => r.json())
+      .then(data => {
+        allArticles = data;
+        renderArticles(allArticles, activeFilter);
+
+        // Set active button
+        document.querySelectorAll(".tag-filter-btn").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.filter === activeFilter);
+          btn.addEventListener("click", () => {
+            activeFilter = btn.dataset.filter;
+            document.querySelectorAll(".tag-filter-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderArticles(allArticles, activeFilter);
+          });
+        });
+      })
+      .catch(() => {
+        document.getElementById("articles-list").innerHTML =
+          '<p style="color: rgba(42,47,58,0.4); font-size: 14px;">Gagal memuat artikel.</p>';
+      });
+  </script>
 </body>
 </html>

@@ -1,0 +1,74 @@
+name: Generate Articles JSON
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'articles/**.html'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate articles.json
+        run: |
+          python3 - <<'EOF'
+          import os, json, re
+          from datetime import datetime
+
+          articles = []
+          folder = "articles"
+
+          for fname in os.listdir(folder):
+              if fname.endswith(".html") and fname != "index.html":
+                  path = os.path.join(folder, fname)
+                  with open(path, "r", encoding="utf-8") as f:
+                      content = f.read()
+
+                  def get_meta(name):
+                      m = re.search(rf'<meta name="article:{name}" content="([^"]+)"', content)
+                      return m.group(1) if m else ""
+
+                  def get_title():
+                      m = re.search(r"<title>([^<]+)</title>", content)
+                      return m.group(1) if m else fname
+
+                  tag = get_meta("tag")
+                  emiten = get_meta("emiten")
+                  date = get_meta("date")
+                  excerpt = get_meta("excerpt")
+                  readtime = get_meta("readtime")
+                  title = get_title()
+
+                  if not date:
+                      date = "2026-01-01"
+
+                  articles.append({
+                      "file": fname,
+                      "title": title,
+                      "tag": tag,
+                      "emiten": emiten,
+                      "date": date,
+                      "excerpt": excerpt,
+                      "readtime": readtime
+                  })
+
+          articles.sort(key=lambda x: x["date"], reverse=True)
+
+          with open(os.path.join(folder, "articles.json"), "w", encoding="utf-8") as f:
+              json.dump(articles, f, ensure_ascii=False, indent=2)
+
+          print(f"Generated {len(articles)} articles")
+          EOF
+
+      - name: Commit articles.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add articles/articles.json
+          git diff --staged --quiet || git commit -m "auto: update articles.json"
+          git push
