@@ -1,0 +1,67 @@
+name: Generate Data Manifest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**.txt'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate manifest.json
+        run: |
+          python3 - <<'EOF'
+          import os, json, re
+
+          data_dir = "data"
+          manifest = []
+
+          for fname in os.listdir(data_dir):
+              if not fname.endswith(".txt"):
+                  continue
+
+              # Deteksi tipe dan tanggal dari nama file
+              # Format: Balancepos20250131.txt atau StatisEfek20250131.txt
+              bal = re.match(r'[Bb]alancepos(\d{8})\.txt', fname)
+              sta = re.match(r'[Ss]tatis[Ee]fek(\d{8})\.txt', fname)
+
+              if bal:
+                  date_str = bal.group(1)
+                  ftype = "balance"
+              elif sta:
+                  date_str = sta.group(1)
+                  ftype = "statis"
+              else:
+                  continue
+
+              # Format tanggal YYYYMMDD -> YYYY-MM-DD
+              date_fmt = f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:]}"
+
+              manifest.append({
+                  "filename": fname,
+                  "type": ftype,
+                  "date": date_fmt
+              })
+
+          # Sort terbaru dulu
+          manifest.sort(key=lambda x: x["date"], reverse=True)
+
+          with open(os.path.join(data_dir, "manifest.json"), "w") as f:
+              json.dump(manifest, f, indent=2)
+
+          print(f"Generated manifest with {len(manifest)} files")
+          EOF
+
+      - name: Commit manifest.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/manifest.json
+          git diff --staged --quiet || git commit -m "auto: update data manifest"
+          git push
