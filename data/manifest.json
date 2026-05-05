@@ -1,5 +1,10 @@
 [
   {
+    "filename": "Balancepos20260430.txt",
+    "type": "balance",
+    "date": "2026-04-30"
+  },
+  {
     "filename": "Balancepos20260331.txt",
     "type": "balance",
     "date": "2026-03-31"
