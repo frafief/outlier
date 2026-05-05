@@ -1,0 +1,77 @@
+[
+  {
+    "filename": "Balancepos20260331.txt",
+    "type": "balance",
+    "date": "2026-03-31"
+  },
+  {
+    "filename": "Balancepos20260227.txt",
+    "type": "balance",
+    "date": "2026-02-27"
+  },
+  {
+    "filename": "Balancepos20260130.txt",
+    "type": "balance",
+    "date": "2026-01-30"
+  },
+  {
+    "filename": "Balancepos20251230.txt",
+    "type": "balance",
+    "date": "2025-12-30"
+  },
+  {
+    "filename": "Balancepos20251128.txt",
+    "type": "balance",
+    "date": "2025-11-28"
+  },
+  {
+    "filename": "Balancepos20251031.txt",
+    "type": "balance",
+    "date": "2025-10-31"
+  },
+  {
+    "filename": "Balancepos20250930.txt",
+    "type": "balance",
+    "date": "2025-09-30"
+  },
+  {
+    "filename": "Balancepos20250829.txt",
+    "type": "balance",
+    "date": "2025-08-29"
+  },
+  {
+    "filename": "Balancepos20250731.txt",
+    "type": "balance",
+    "date": "2025-07-31"
+  },
+  {
+    "filename": "Balancepos20250630.txt",
+    "type": "balance",
+    "date": "2025-06-30"
+  },
+  {
+    "filename": "Balancepos20250528.txt",
+    "type": "balance",
+    "date": "2025-05-28"
+  },
+  {
+    "filename": "Balancepos20250430.txt",
+    "type": "balance",
+    "date": "2025-04-30"
+  },
+  {
+    "filename": "Balancepos20250327.txt",
+    "type": "balance",
+    "date": "2025-03-27"
+  },
+  {
+    "filename": "Balancepos20250228.txt",
+    "type": "balance",
+    "date": "2025-02-28"
+  },
+  {
+    "filename": "Balancepos20250131.txt",
+    "type": "balance",
+    "date": "2025-01-31"
+  }
+]
